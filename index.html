@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0063)file:///C:/Users/admin/WorkBuddy/2026-08-23-13-10-11/index.html -->
+<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#f4f1ea">
 <title>我的成长行动台</title>
@@ -24,6 +24,7 @@
   --shadow:0 2px 10px rgba(60,50,30,.06);
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none!important}
 html,body{margin:0;padding:0}
 body{
   font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",Segoe UI,sans-serif;
@@ -36,9 +37,10 @@ body{
 .topbar{position:sticky;top:0;z-index:20;background:var(--bg);
   display:flex;align-items:center;justify-content:space-between;
   padding:14px 18px 10px;padding-top:calc(14px + env(safe-area-inset-top))}
-.brand{font-size:17px;font-weight:700;letter-spacing:.5px}
+.brand{font-size:17px;font-weight:700;letter-spacing:.5px;cursor:default}
+.top-right{display:flex;gap:6px;align-items:center}
 .today-pill{font-size:12px;color:var(--accent);background:var(--accent-soft);
-  padding:4px 12px;border-radius:999px;font-weight:600}
+  padding:4px 12px;border-radius:999px;font-weight:600;cursor:pointer;border:none;font:inherit}
 
 #view{flex:1;padding:6px 14px 90px;overflow-y:auto}
 
@@ -186,6 +188,9 @@ body{
 .src-group{margin:10px 0}
 .src-group h5{margin:6px 0;font-size:13px;color:var(--accent)}
 
+.insp{background:var(--accent-soft);color:var(--accent);border:none;border-radius:999px;
+  padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;margin:4px 0 2px}
+
 /* toast */
 .toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);
   background:rgba(40,35,25,.9);color:#fff;padding:10px 18px;border-radius:999px;
@@ -196,33 +201,52 @@ body{
 <body>
 <div id="app">
   <header class="topbar">
-    <div class="brand">我的成长行动台</div>
+    <div class="brand" title="双击：数据管理">我的成长行动台</div>
     <div class="top-right">
-      <span class="today-pill" id="topDate"></span>
+      <button class="today-pill" id="topDate">8月23日</button>
+      <button class="today-pill" id="backToday" hidden="">今天</button>
+      <input type="date" id="datePick" hidden="">
     </div>
   </header>
 
-  <main id="view"></main>
+  <main id="view">
+    <div class="reminder">
+      <div class="r-title">今日提醒</div>
+      <div class="r-text">不需要等准备完美再开始，先做出第一个版本。</div>
+    </div><div class="act" style="background:var(--card)">
+      <div class="act-top">
+        <div class="act-check " data-act="body-toggle"></div>
+        <div class="act-main"><div class="act-content">今日身体计划已完成</div>
+        <div class="act-tags"><span class="tag src">身体 · 轻量</span></div></div>
+      </div></div><div class="sec"><h3>今日行动</h3><span class="count">0 项</span></div><div class="empty">今天还没有安排。点右下角 + ，从探索池、项目下一步或自己的念头里，挑一件就好。</div><button class="insp" data-act="random-insp">🎲 随机挑一个灵感加进行动台</button><div class="anx-actions">
+    <button class="anx-btn" data-act="anx-nothing">我觉得什么都没做</button>
+    <button class="anx-btn" data-act="anx-redesign">想重新设计系统</button>
+  </div></main>
 
   <nav class="tabbar">
-    <button class="tab" data-view="home"><span class="ti">◈</span><span>行动台</span></button>
+    <button class="tab active" data-view="home"><span class="ti">◈</span><span>行动台</span></button>
     <button class="tab" data-view="pool"><span class="ti">✿</span><span>探索池</span></button>
     <button class="tab" data-view="projects"><span class="ti">▣</span><span>项目库</span></button>
     <button class="tab" data-view="records"><span class="ti">☰</span><span>记录</span></button>
+    <button class="tab" data-view="summary"><span class="ti">▦</span><span>汇总</span></button>
   </nav>
-</div>
+<button class="fab">+</button></div>
 
-<div id="modal" class="modal-mask" hidden>
+<div id="modal" class="modal-mask" hidden="">
   <div class="modal">
     <div class="modal-head"><span id="modalTitle"></span><button class="modal-x" id="modalX">×</button></div>
     <div class="modal-body" id="modalBody"></div>
   </div>
 </div>
 
-<div id="toast" class="toast" hidden></div>
+<div id="toast" class="toast" hidden=""></div>
 
 <script>
-/* ============ 个人成长行动台 V2 ============ */
+/* ============ 个人成长工作台 · 混合版 ============
+   首页：V2「我的行动台」（今日提醒 + 焦虑提醒 + 来源 + 截止日期可选）
+   第2-5层：恢复 V1（丰富探索池 / 项目库 / 全部历史记录 / 周月汇总）
+   交互修正：弹窗默认隐藏、日期可切换回看、导出导入、全部历史按日期分组
+=================================================== */
 const STORE_KEY = 'growth_workbench_v2';
 const OLD_KEY = 'growth_workbench_v1';
 
@@ -248,55 +272,71 @@ const ANX = {
   redesign: '先使用 7 天，再优化。真实体验比完美设计更有价值。'
 };
 
-/* ---------- 种子：探索池 ---------- */
+/* ---------- 种子：探索池（V1 丰富子类）---------- */
 function seedPool(){
   return {
-    ai: ['测试一个新的 AI 工具','看一个 GitHub 项目','用 AI 解决一个工作痛点','优化已有 AI 工具','做一个小 Demo','研究一个 AI 应用案例'],
-    career: [
-      '看 3 个采购经理岗位','分析岗位关键词','收藏匹配岗位','优化一个简历模块','准备一个面试案例',
-      '整理一个采购案例','总结一次流程优化经验','梳理供应商治理方法','沉淀采购管理框架',
-      '记录一个工作痛点','优化一个流程','找一个 AI 应用场景','总结一次问题解决过程'
-    ],
-    life: [
-      '做一个新面包','改良一个配方','做一次主题晚餐',
-      '优化一个房间角落','研究一个提升生活质量的小物','设计未来独居空间',
-      '去一个没去过的地方','找一家特色店','一个下午随机探索',
-      '陶艺体验','看一次展览','逛一次市集','做一次手作','看一场脱口秀','体验一种新运动'
-    ]
+    career: {
+      '跳槽行动': ['查看 3-5 个匹配岗位 JD','投递 1-3 个匹配岗位','收藏 2 个值得后续关注的岗位','记录一个岗位高频关键词','复盘一次招聘沟通','针对高意向岗位调整一版简历','准备一个面试案例','优化一个已有案例的表达'],
+      '职业资产沉淀': ['整理一个采购项目案例','总结一次需求审核中的典型问题','梳理一个供应商治理案例','总结一个流程优化案例','记录一个招投标风险处理案例','把一个零散工作整理成 STAR 案例','总结一次跨部门沟通经验','记录一个当前工作中值得复用的方法','将一个复杂问题整理成一页方法论','总结一次“从模糊任务到可执行方案”的过程'],
+      '当前工作价值挖掘': ['记录一个当前工作的痛点','找出一个重复工作是否可以优化','梳理一个可以数字化的流程','总结一次新机制的形成过程','记录一次风险识别案例','把一次临时工作包装成案例草稿','找出一个可以用 AI 辅助的工作场景','总结领导临时交办事项中的结构化处理方法']
+    },
+    ai: {
+      '发现问题': ['记录一个日常重复动作','记录一个工作中的低效流程','找一个“如果有 AI 助手会方便很多”的场景','把一个工作痛点写成简单需求'],
+      '工具探索': ['测试一个 AI 工具','找一个 GitHub 项目看它解决什么问题','让 AI 解释一个看不懂的开源项目','比较两个 AI 工具解决同一问题的效果','试一个新模型完成具体任务'],
+      '小应用实践': ['用 AI 搭一个简单页面','修复一个已有工作台的小 Bug','优化个人工作台一个功能','搭一个采购场景 Demo','用 AI 把一个手工流程变成半自动流程','把一个需求文档交给 AI 生成原型','根据使用反馈迭代一次已有工具'],
+      '案例沉淀': ['写下一个 AI 应用的背景','记录 AI 解决了什么问题','记录一次失败尝试和原因','把一个 AI 小工具整理成面试案例','总结一次“需求 → AI 实现 → 反馈 → 迭代”的完整过程']
+    },
+    life: {
+      '厨房创造': ['做一道从没做过的菜','尝试一个新的面包配方','改良一个已经做过的配方','用冰箱现有材料随机做一顿饭','设计下一周早餐组合','尝试一种没买过的食材','拍一组自己做的食物照片','做一次主题晚餐','复刻一家店吃过的东西'],
+      '空间和独立生活': ['整理一个抽屉','优化一个桌面区域','清理一类不用的东西','找一个提升居住体验的小物','研究一个未来独居需要的物品','看 3 套感兴趣区域的租房','算一次独居成本','设计理想房间的一个区域','收拾一块属于自己的固定空间','做一次“未来独居晚餐”模拟'],
+      '城市探索': ['去一个没去过的地铁站附近探索','找一家从没去过的小店','找一家特色面包店','找一家好吃的小餐馆','找一个有意思的市集','找一个周末展览','去一个以前没进去过的商场/街区','拍 5 张有主题的城市照片','用 100 元完成一次随机城市体验','找一个适合未来独处的地方'],
+      '新体验': ['体验一次攀岩','体验一次射箭','体验一次陶艺','体验一次手作','参加一次市集','去一次 Livehouse','看一次脱口秀','体验一种新的运动','报一次单次体验课','一个人去一家以前觉得需要结伴才会去的地方'],
+      '轻量娱乐和探索': ['找一本感兴趣的小说','看一部真正想看的电影','找一个纪录片','找一个有趣的 YouTube/B站频道','看一期完全陌生领域的内容','研究一个最近好奇的问题','随机找一个城市旅行攻略','收藏一个未来想去的地方','找 3 个以后可以买的小玩意','玩一个没玩过的小游戏'],
+      '“有点野”的随机任务': ['随机坐 5 站地铁，下车完成一个探索任务','用 50 元买一个没什么实用性但自己喜欢的东西','一个人去吃一次平时不会单独吃的东西','工作日下午请半天假做一次“成年人逃课”','找一家从没注意过的小店进去看看','挑一个完全不像自己会参加的体验活动','给自己安排一次半日盲盒出行','一个人去 KTV 唱一小时','住一晚酒店模拟独居','给自己设置一个 100 元体验预算并花掉']
+    }
   };
 }
-/* ---------- 种子：项目库 ---------- */
+/* 所有探索项（用于随机灵感） */
+function flatPool(){
+  const out=[]; const p=state.pool;
+  Object.keys(p).forEach(dir=>{ Object.values(p[dir]).forEach(arr=>arr.forEach(it=>out.push({it,dir}))); });
+  return out;
+}
+/* ---------- 种子：项目库（V1 预设）---------- */
 function seedProjects(){
   return [
-    { id:uid(), name:'AI 个人成长工作台', goal:'搭建适合自己的个人行动反馈系统', stage:'V1 完成',
+    { id:uid(), name:'AI 个人成长工作台', goal:'搭建适合自己的个人行动和反馈系统', stage:'V1 完成',
       status:'进行中', steps:[
-        {id:uid(),content:'调整每日页面',status:'已完成'},
-        {id:uid(),content:'优化任务池',status:'已完成'},
-        {id:uid(),content:'增加自动总结',status:'待安排'},
-        {id:uid(),content:'根据反馈迭代',status:'待安排'}
+        {id:uid(),content:'优化今日页面',status:'已完成'},
+        {id:uid(),content:'增加任务池',status:'已完成'},
+        {id:uid(),content:'测试手机端',status:'待安排'},
+        {id:uid(),content:'增加自动汇总',status:'待安排'},
+        {id:uid(),content:'根据实际使用反馈调整',status:'待安排'}
       ]},
-    { id:uid(), name:'AI 采购应用探索', goal:'形成 1-2 个 AI+采购应用案例', stage:'收集痛点中',
+    { id:uid(), name:'AI 采购应用探索', goal:'探索 1-2 个 AI 可以实际解决采购问题的应用场景', stage:'收集痛点中',
       status:'进行中', steps:[
-        {id:uid(),content:'收集 3 个采购痛点',status:'待安排'},
-        {id:uid(),content:'选择一个简单场景',status:'待安排'},
-        {id:uid(),content:'查询已有 AI/开源工具',status:'待安排'},
+        {id:uid(),content:'记录 3 个采购工作痛点',status:'待安排'},
+        {id:uid(),content:'选择一个最容易实现的场景',status:'待安排'},
+        {id:uid(),content:'查找已有 AI/开源工具',status:'待安排'},
         {id:uid(),content:'写一页需求',status:'待安排'},
-        {id:uid(),content:'搭建 Demo',status:'待安排'},
-        {id:uid(),content:'记录反馈并沉淀案例',status:'待安排'}
+        {id:uid(),content:'搭一个简单 Demo',status:'待安排'},
+        {id:uid(),content:'记录使用反馈',status:'待安排'},
+        {id:uid(),content:'整理成案例',status:'待安排'}
       ]},
-    { id:uid(), name:'职业资产库', goal:'把 8 年经验转化为可展示能力', stage:'列清单',
+    { id:uid(), name:'职业案例资产库', goal:'把已有工作经验转化成未来跳槽、晋升、加薪可以使用的职业资产', stage:'列清单',
       status:'进行中', steps:[
-        {id:uid(),content:'列 10 个值得讲的项目',status:'待安排'},
-        {id:uid(),content:'选择优先案例',status:'待安排'},
-        {id:uid(),content:'写背景 / 行动 / 结果',status:'待安排'},
-        {id:uid(),content:'形成面试素材',status:'待安排'}
+        {id:uid(),content:'列出 10 个值得讲的工作事项',status:'待安排'},
+        {id:uid(),content:'每次选一个整理背景',status:'待安排'},
+        {id:uid(),content:'补充行动和结果',status:'待安排'},
+        {id:uid(),content:'提炼个人贡献',status:'待安排'},
+        {id:uid(),content:'整理成面试表达',status:'待安排'}
       ]},
-    { id:uid(), name:'生活体验扩容', goal:'打破“上班—运动—在家”的固定轨道', stage:'建清单',
+    { id:uid(), name:'生活体验扩容', goal:'打破长期“上班—运动—在家”的固定轨道', stage:'建清单',
       status:'进行中', steps:[
         {id:uid(),content:'建立体验候选清单',status:'待安排'},
         {id:uid(),content:'每周挑一个小体验',status:'待安排'},
         {id:uid(),content:'每月至少完成 2 次新体验',status:'待安排'},
-        {id:uid(),content:'记录值得再次尝试的体验',status:'待安排'}
+        {id:uid(),content:'记录哪些体验值得再次尝试',status:'待安排'}
       ]}
   ];
 }
@@ -306,131 +346,142 @@ function uid(){ return 'a'+Date.now().toString(36)+Math.random().toString(36).sl
 function todayStr(){ const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
 function dateLabel(d){ if(!d) return ''; const [y,m,day]=d.split('-'); return (m[0]==='0'?m[1]:m)+'月'+(day[0]==='0'?day[1]:day)+'日'; }
 function isBefore(a,b){ return a && b && a < b; }
+function dayOfYear(){ const d=new Date(); const start=new Date(d.getFullYear(),0,0); return Math.floor((d-start)/86400000); }
 function escapeHtml(s){ return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 function toast(msg){ const t=$('#toast'); t.textContent=msg; t.hidden=false; clearTimeout(toast._t); toast._t=setTimeout(()=>t.hidden=true,1800); }
 function $(s,r=document){ return r.querySelector(s); }
 function $all(s,r=document){ return Array.from(r.querySelectorAll(s)); }
 
-/* ---------- 存储 + v1 迁移 ---------- */
+/* ---------- 存储 + 迁移 ---------- */
 function freshState(){
-  return { version:2, pool:seedPool(), projects:seedProjects(), actions:[], settings:{} };
+  return { version:2, pool:seedPool(), projects:seedProjects(), actions:[], settings:{bodyDone:{}}, view:'home', viewDay:todayStr(), recFilter:'all', sumTab:'week' };
 }
 function migrateV1(){
   try{
     const raw=localStorage.getItem(OLD_KEY); if(!raw) return null;
     const o=JSON.parse(raw); const st=freshState();
-    // 历史 -> 已完成行动
     (o.history||[]).forEach(r=>{
       st.actions.push({ id:uid(), content:r.content, dir:r.dir||'other', source:r.projectId?'项目':'临时想法',
-        plannedDate:r.date, dueDate:null, status:r.done?'已完成':'待安排', projectId:r.projectId||null,
-        createdAt:r.date, completedAt:r.completedAt||null, feedback:r.feedback||'', isAchievement:!!r.isAchievement });
+        dueDate:null, status:r.done?'已完成':'待安排', projectId:r.projectId||null, stepId:null,
+        createdAt:r.date, completedAt:r.completedAt||null, feedback:r.feedback||'', isAchievement:!!r.isAchievement, achDetail:r.achDetail||'' });
     });
-    // 今日未完成项 -> 行动
     (o.today&&o.today.items||[]).forEach(it=>{
       if(it.done) return;
       st.actions.push({ id:uid(), content:it.text, dir:it.dir||'other', source:it.projectId?'项目':'临时想法',
-        plannedDate:o.today.date, dueDate:null, status:'待安排', projectId:it.projectId||null,
-        createdAt:o.today.date, completedAt:null, feedback:'', isAchievement:false });
+        dueDate:null, status:'待安排', projectId:it.projectId||null, stepId:null,
+        createdAt:o.today.date, completedAt:null, feedback:'', isAchievement:false, achDetail:'' });
     });
     if(o.projects) st.projects=o.projects;
+    if(o.pool) st.pool=o.pool;
     return st;
   }catch(e){ return null; }
 }
 function load(){
-  try{ const raw=localStorage.getItem(STORE_KEY); if(raw){ const s=JSON.parse(raw); if(!s.actions) s.actions=[]; return s; } }catch(e){}
+  try{ const raw=localStorage.getItem(STORE_KEY); if(raw){ const s=JSON.parse(raw);
+    if(!s.actions) s.actions=[]; if(!s.pool) s.pool=seedPool(); if(!s.projects) s.projects=seedProjects();
+    if(!s.settings) s.settings={bodyDone:{}}; if(!s.view) s.view='home'; if(!s.viewDay) s.viewDay=todayStr();
+    return s; } }catch(e){}
   const m=migrateV1(); if(m){ return m; }
   return freshState();
 }
 function save(){ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }
-
 let state = load();
 
-/* ---------- 当前视图 ---------- */
-let view = 'home';
-let recTab = 'all';
-let recFilter = 'all';
+/* ---------- 视图状态 ---------- */
+let view = state.view || 'home';
+let poolFilter = 'all';
 
-function go(v){ view=v; render(); }
+function go(v){ view=v; state.view=v; save(); render(); }
 function render(){
-  $('#topDate').textContent = dateLabel(todayStr());
+  $('#topDate').textContent = dateLabel(state.viewDay);
+  $('#backToday').hidden = (state.viewDay===todayStr());
   const v=$('#view');
   if(view==='home') v.innerHTML=renderHome();
   else if(view==='pool') v.innerHTML=renderPool();
   else if(view==='projects') v.innerHTML=renderProjects();
   else if(view==='records') v.innerHTML=renderRecords();
+  else if(view==='summary') v.innerHTML=renderSummary();
   $all('.tab').forEach(t=>t.classList.toggle('active', t.dataset.view===view));
   window.scrollTo(0,0);
 }
 
-/* ================= 首页：我的行动台 ================= */
+/* ================= 首页：我的行动台（V2）================= */
 function renderHome(){
-  const t = todayStr();
+  const t = state.viewDay;
+  const today = todayStr();
   const actions = state.actions;
-  const todayItems = actions.filter(a=>a.plannedDate===t && a.status!=='已完成');
-  const overdue = actions.filter(a=>isBefore(a.plannedDate,t) && a.status!=='已完成');
-  const upcoming = actions.filter(a=>isBefore(t,a.plannedDate) && a.status!=='已完成').sort((x,y)=>x.plannedDate<y.plannedDate?-1:1);
-  const activeNoDate = actions.filter(a=>!a.plannedDate && a.status==='进行中');
-  const doneToday = actions.filter(a=>a.status==='已完成' && a.completedAt && a.completedAt.slice(0,10)===t);
+
+  // 回看某一天
+  if(t !== today){
+    const done = actions.filter(a=> (a.completedAt||'').slice(0,10)===t);
+    let html = `<div class="reminder"><div class="r-title">回顾 · ${dateLabel(t)}</div>
+      <div class="r-text">这一天完成的行动如下。点右上角「今天」返回当前。</div></div>`;
+    html += `<div class="sec"><h3>当天完成</h3><span class="count">${done.length} 件</span></div>`;
+    html += done.length ? done.map(a=>actCard(a,true)).join('') : `<div class="empty">这一天没有完成记录。</div>`;
+    html += `<button class="btn ghost" data-act="back-today" style="margin-top:14px">← 回到今天</button>`;
+    return html;
+  }
 
   const reminder = TODAY_REMINDERS[(dayOfYear()%TODAY_REMINDERS.length)];
+  const noDateOrToday = a => !a.dueDate || a.dueDate===today;
+  const todayItems = actions.filter(a=> a.status!=='已完成' && noDateOrToday(a));
+  const overdue = actions.filter(a=> a.status!=='已完成' && isBefore(a.dueDate, today));
+  const upcoming = actions.filter(a=> a.status!=='已完成' && isBefore(today, a.dueDate)).sort((x,y)=>x.dueDate<y.dueDate?-1:1);
+  const doneToday = actions.filter(a=> a.status==='已完成' && (a.completedAt||'').slice(0,10)===today);
+
   let html = `
     <div class="reminder">
       <div class="r-title">今日提醒</div>
       <div class="r-text">${reminder}</div>
     </div>`;
+  if(todayItems.length>=5) html += `<div class="anx-banner">${ANX.many}</div>`;
 
-  if(todayItems.length>=5){
-    html += `<div class="anx-banner">${ANX.many}</div>`;
-  }
+  // 身体计划（V1 轻量入口，不记录明细）
+  const bodyDone = (state.settings.bodyDone && state.settings.bodyDone[today]) ? 'on' : '';
+  html += `<div class="act" style="background:var(--card)">
+      <div class="act-top">
+        <div class="act-check ${bodyDone}" data-act="body-toggle">${bodyDone?'✓':''}</div>
+        <div class="act-main"><div class="act-content">今日身体计划已完成</div>
+        <div class="act-tags"><span class="tag src">身体 · 轻量</span></div></div>
+      </div></div>`;
 
   // 今日行动
   html += `<div class="sec"><h3>今日行动</h3><span class="count">${todayItems.length} 项</span></div>`;
   if(todayItems.length===0) html += `<div class="empty">今天还没有安排。点右下角 + ，从探索池、项目下一步或自己的念头里，挑一件就好。</div>`;
   else html += todayItems.map(a=>actCard(a)).join('');
 
-  // 逾期（温和提示）
+  // 不知道做什么
+  html += `<button class="insp" data-act="random-insp">🎲 随机挑一个灵感加进行动台</button>`;
+
   if(overdue.length){
     html += `<div class="sec"><h3>还没做的（之前计划）</h3><span class="count">${overdue.length} 项</span></div>`;
     html += overdue.map(a=>actCard(a)).join('');
   }
-  // 进行中（无日期）
-  if(activeNoDate.length){
-    html += `<div class="sec"><h3>进行中</h3></div>`;
-    html += activeNoDate.map(a=>actCard(a)).join('');
-  }
-  // 即将到来
   if(upcoming.length){
     html += `<div class="sec"><h3>即将到来</h3><span class="count">${upcoming.length} 项</span></div>`;
     html += upcoming.map(a=>actCard(a)).join('');
   }
-
-  // 今日完成（完成感）
   if(doneToday.length){
     html += `<div class="sec"><h3>今天已完成</h3><span class="count">${doneToday.length} 件 ✓</span></div>`;
     html += doneToday.map(a=>actCard(a,true)).join('');
   }
 
-  // 焦虑急救
   html += `<div class="anx-actions">
     <button class="anx-btn" data-act="anx-nothing">我觉得什么都没做</button>
     <button class="anx-btn" data-act="anx-redesign">想重新设计系统</button>
   </div>`;
-
   return html;
 }
-function dayOfYear(){ const d=new Date(); const start=new Date(d.getFullYear(),0,0); return Math.floor((d-start)/86400000); }
 
 function actCard(a, doneReadonly){
   const done = a.status==='已完成';
   const srcTag = a.source?`<span class="tag src">${escapeHtml(a.source)}</span>`:'';
   const proj = a.projectId? state.projects.find(p=>p.id===a.projectId):null;
   const projTag = proj?`<span class="tag proj">${escapeHtml(proj.name)}</span>`:'';
-  const dueTag = a.dueDate?`<span class="tag due">${dateLabel(a.dueDate)}前</span>`:'';
+  const dueTag = a.dueDate?`<span class="tag due">${isBefore(a.dueDate,todayStr())?'已逾期 · ':''}${dateLabel(a.dueDate)}前</span>`:'';
   const achTag = a.isAchievement?`<span class="tag ach">成果</span>`:'';
-  const sub = [];
-  if(a.plannedDate && a.plannedDate!==todayStr()) sub.push('计划 '+dateLabel(a.plannedDate));
-  if(a.feedback) sub.push('反馈：'+a.feedback);
-  return `<div class="act ${done?'done':''}" data-id="${a.id}">
+  const sub=[]; if(a.feedback) sub.push('反馈：'+a.feedback);
+  return `<div class="act ${done?'done':''}">
     <div class="act-top">
       <div class="act-check ${done?'on':''}" data-act="toggle" data-id="${a.id}">${done?'✓':''}</div>
       <div class="act-main">
@@ -445,26 +496,28 @@ function actCard(a, doneReadonly){
   </div>`;
 }
 
-/* ================= 探索池 ================= */
+/* ================= 探索池（V1 丰富子类）================= */
 function renderPool(){
   const p=state.pool;
-  const cat=(title,arr,key)=>{
-    let h=`<div class="pool-cat"><h4>${title}</h4>`;
-    h+=arr.map((it,i)=>`<div class="pool-item"><span>${escapeHtml(it)}</span>
-      <button class="pool-add" data-act="pool-add" data-key="${key}" data-i="${i}">加入行动台</button></div>`).join('');
-    h+=`<button class="link-add" data-act="pool-new" data-key="${key}">+ 添加一条到「${title}」</button></div>`;
-    return h;
-  };
-  return `
-    <div class="reminder"><div class="r-title">这是探索池</div>
-      <div class="r-text">不是待办，是“以后可能想做”。随便看看，有感觉就加进行动台，没感觉就放着——这里不产生未完成压力。</div></div>
-    ${cat('AI 探索',p.ai,'ai')}
-    ${cat('职业成长',p.career,'career')}
-    ${cat('生活创造',p.life,'life')}
-  `;
+  const dirKeys = poolFilter==='all' ? ['career','ai','life'] : [poolFilter];
+  const filterBar = `<div class="tabs2">`+
+    ['all','career','ai','life'].map(f=>`<button class="${poolFilter===f?'on':''}" data-act="pool-filter" data-f="${f}">${f==='all'?'全部':DIRS[f]}</button>`).join('')+
+    `</div>`;
+  let html = filterBar + `<div class="reminder"><div class="r-title">这是探索池</div>
+    <div class="r-text">不是待办，是“以后可能想做”。随便看看，有感觉就加进行动台，没感觉就放着——这里不产生未完成压力。</div></div>`;
+  dirKeys.forEach(dir=>{
+    html += `<div class="sec"><h3>${DIRS[dir]}</h3></div>`;
+    Object.entries(p[dir]).forEach(([cat, arr])=>{
+      html += `<div class="pool-cat"><h4>${cat}</h4>`;
+      html += arr.map((it,i)=>`<div class="pool-item"><span>${escapeHtml(it)}</span>
+        <button class="pool-add" data-act="pool-add" data-dir="${dir}" data-cat="${encodeURIComponent(cat)}" data-i="${i}">加入行动台</button></div>`).join('');
+      html += `<button class="link-add" data-act="pool-new" data-dir="${dir}" data-cat="${encodeURIComponent(cat)}">+ 添加一条到「${cat}」</button></div>`;
+    });
+  });
+  return html;
 }
 
-/* ================= 项目库 ================= */
+/* ================= 项目库（V1）================= */
 function renderProjects(){
   if(state.projects.length===0) return `<div class="empty">还没有项目。项目是“长期一点的事”。点右下角 + 新建一个。</div>`;
   return state.projects.map(proj=>{
@@ -492,31 +545,17 @@ function renderProjects(){
   }).join('');
 }
 
-/* ================= 记录 + 周报月报成果（整合层）================= */
+/* ================= 记录（V1：全部历史）================= */
 function renderRecords(){
-  let html=`<div class="tabs2">
-    <button class="${recTab==='all'?'on':''}" data-act="rectab" data-t="all">全部记录</button>
-    <button class="${recTab==='week'?'on':''}" data-act="rectab" data-t="week">周报</button>
-    <button class="${recTab==='month'?'on':''}" data-act="rectab" data-t="month">月报</button>
-    <button class="${recTab==='ach'?'on':''}" data-act="rectab" data-t="ach">成果</button>
-  </div>`;
-
-  if(recTab==='week'){ html+=renderWeek(); }
-  else if(recTab==='month'){ html+=renderMonth(); }
-  else if(recTab==='ach'){ html+=renderAch(); }
-  else { html+=renderAllRecords(); }
-  return html;
-}
-function renderAllRecords(){
   const done = state.actions.filter(a=>a.status==='已完成').slice().sort((x,y)=>(y.completedAt||'').localeCompare(x.completedAt||''));
   let html=`<div class="sec"><h3>全部完成记录</h3><span class="count">共 ${done.length} 条 · 跨所有日期</span></div>`;
+  html+=`<p style="color:var(--muted);font-size:12.5px;margin:0 0 8px">这是你做过的所有事，按日期分组。这里只是“看见”，不考核。</p>`;
   const filters=['all','career','ai','life','other'];
-  html+=`<div class="tabs2">`+filters.map(f=>`<button class="${recFilter===f?'on':''}" data-act="recfilter" data-f="${f}">${f==='all'?'全部':DIRS[f]}</button>`).join('')+`</div>`;
-  const list=done.filter(a=>recFilter==='all'||a.dir===recFilter);
+  html+=`<div class="tabs2">`+filters.map(f=>`<button class="${state.recFilter===f?'on':''}" data-act="recfilter" data-f="${f}">${f==='all'?'全部':DIRS[f]}</button>`).join('')+`</div>`;
+  const list=done.filter(a=>state.recFilter==='all'||a.dir===state.recFilter);
   if(list.length===0){ html+=`<div class="empty">还没有完成记录。去行动台勾选一件吧。</div>`; return html; }
-  // 按日期分组
   const groups={};
-  list.forEach(a=>{ const d=(a.completedAt||'').slice(0,10)||a.plannedDate||'未知'; (groups[d]=groups[d]||[]).push(a); });
+  list.forEach(a=>{ const d=(a.completedAt||'').slice(0,10)||'未知'; (groups[d]=groups[d]||[]).push(a); });
   Object.keys(groups).sort((a,b)=>b.localeCompare(a)).forEach(d=>{
     html+=`<div class="rec-date">${dateLabel(d)}（${d}）</div>`;
     groups[d].forEach(a=>html+=recRow(a));
@@ -538,6 +577,18 @@ function recRow(a){
     </div>
   </div>`;
 }
+
+/* ================= 汇总（周报 / 月报 / 成果）================= */
+function renderSummary(){
+  const tabs=`<div class="tabs2">
+    <button class="${state.sumTab==='week'?'on':''}" data-act="sumtab" data-t="week">周报</button>
+    <button class="${state.sumTab==='month'?'on':''}" data-act="sumtab" data-t="month">月报</button>
+    <button class="${state.sumTab==='ach'?'on':''}" data-act="sumtab" data-t="ach">成果沉淀</button>
+  </div>`;
+  if(state.sumTab==='month') return tabs+renderMonth();
+  if(state.sumTab==='ach') return tabs+renderAch();
+  return tabs+renderWeek();
+}
 function renderWeek(){
   const t=new Date(); const dow=(t.getDay()+6)%7; const mon=new Date(t); mon.setDate(t.getDate()-dow);
   const start=mon.toISOString().slice(0,10); const sun=new Date(mon); sun.setDate(mon.getDate()+7);
@@ -547,10 +598,9 @@ function renderWeek(){
   let html=`<div class="report"><h4>本周完成（${dateLabel(start)} – ${dateLabel(end)}）</h4>
     <div class="kpis">${['career','ai','life','other'].map(k=>`<div class="kpi"><div class="n">${cnt[k]}</div><div class="l">${DIRS[k]}</div></div>`).join('')}</div>
     <ul>${done.length?done.map(a=>`<li>${escapeHtml(a.content)} <span style="color:var(--muted)">（${DIRS[a.dir]}）</span></li>`).join(''):'<li>本周还没有完成，挑一件开始吧。</li>'}</ul>`;
-  // 项目进展
   const prog=state.projects.map(p=>{ const d=p.steps.filter(s=>s.status==='已完成').length; return {n:p.name,d,t:p.steps.length}; }).filter(x=>x.t>0);
   if(prog.length){ html+=`<h4 style="margin-top:10px">项目进展</h4><ul>`+prog.map(x=>`<li>${escapeHtml(x.n)}：${x.d}/${x.t}</li>`).join('')+`</ul>`; }
-  html+=`</div>`;
+  html+=`</div><p style="font-size:13px;color:var(--muted);text-align:center;margin:6px 0 0">这周你推进了一点，这就够了。</p>`;
   return html;
 }
 function renderMonth(){
@@ -559,7 +609,7 @@ function renderMonth(){
   const cnt={career:0,ai:0,life:0,other:0}; done.forEach(a=>cnt[a.dir]++);
   const ach=state.actions.filter(a=>a.isAchievement);
   const finishedProj=state.projects.filter(p=>p.steps.length&&p.steps.every(s=>s.status==='已完成'));
-  let html=`<div class="report"><h4>${t.getMonth()+1} 月小结</h4>
+  return `<div class="report"><h4>${t.getMonth()+1} 月小结</h4>
     <div class="kpis">${['career','ai','life','other'].map(k=>`<div class="kpi"><div class="n">${cnt[k]}</div><div class="l">${DIRS[k]}</div></div>`).join('')}</div>
     <ul>
       <li>完成行动共 <b>${done.length}</b> 件</li>
@@ -568,11 +618,10 @@ function renderMonth(){
       <li>生活新体验 ${cnt.life} 次 · AI 实践 ${cnt.ai} 次 · 职业推进 ${cnt.career} 次</li>
     </ul>
     <p style="font-size:13px;color:var(--muted);margin:8px 0 0">这个月你其实做了不少事。继续，不急。</p></div>`;
-  return html;
 }
 function renderAch(){
   const ach=state.actions.filter(a=>a.isAchievement);
-  if(ach.length===0) return `<div class="empty">还没有标记成果。在“全部记录”里，把值得沉淀的完成项标记为成果。</div>`;
+  if(ach.length===0) return `<div class="empty">还没有标记成果。在「记录」里，把值得沉淀的完成项标记为成果。</div>`;
   return ach.map(a=>`<div class="report">
     <h4>${escapeHtml(a.content)}</h4>
     <div class="rmeta" style="color:var(--muted);font-size:12px">${dateLabel((a.completedAt||'').slice(0,10))} · ${DIRS[a.dir]}</div>
@@ -581,10 +630,11 @@ function renderAch(){
   </div>`).join('');
 }
 
-/* ================= 动作：行动台 CRUD ================= */
+/* ================= 行动台 CRUD ================= */
 function addAction(obj){
-  state.actions.push(Object.assign({ id:uid(), source:'临时想法', dir:'other', plannedDate:todayStr(),
-    dueDate:null, status:'待安排', projectId:null, createdAt:todayStr(), completedAt:null, feedback:'', isAchievement:false }, obj));
+  state.actions.push(Object.assign({ id:uid(), source:'临时想法', dir:'other', dueDate:null,
+    status:'待安排', projectId:null, stepId:null, createdAt:todayStr(), completedAt:null,
+    feedback:'', isAchievement:false, achDetail:'' }, obj));
   save(); render();
 }
 function getAction(id){ return state.actions.find(a=>a.id===id); }
@@ -617,7 +667,6 @@ function formFields(a){
       <div class="pick-row" id="f-dir">
         ${Object.entries(DIRS).map(([k,v])=>`<div class="pick ${!a.dir||a.dir===k?'on':''}" data-v="${k}">${v}</div>`).join('')}
       </div></div>
-    <div class="field"><label>计划日期（准备什么时候做）</label><input id="f-plan" type="date" value="${a.plannedDate||todayStr()}"></div>
     <div class="field"><label>截止日期（可选，最晚什么时候完成）</label><input id="f-due" type="date" value="${a.dueDate||''}"></div>
     <div class="field"><label>状态</label>
       <div class="pick-row" id="f-status">
@@ -632,8 +681,7 @@ function bindFormPicks(){
 function readForm(){
   const dir=($('#f-dir .pick.on')||{}).dataset?.v||'other';
   const status=($('#f-status .pick.on')||{}).dataset?.v||'待安排';
-  return { content:$('#f-content').value.trim(), dir, plannedDate:$('#f-plan').value||todayStr(),
-    dueDate:$('#f-due').value||null, status };
+  return { content:$('#f-content').value.trim(), dir, dueDate:$('#f-due').value||null, status };
 }
 function openAddMenu(){
   openModal('添加今日行动', `
@@ -653,13 +701,18 @@ function openSelfForm(preset){
 }
 function openPoolPicker(){
   const p=state.pool;
-  const grp=(title,arr,key)=>`<div class="src-group"><h5>${title}</h5>`+
-    arr.map((it,i)=>`<div class="pool-item"><span>${escapeHtml(it)}</span>
-      <button class="pool-add" data-act="pool-pick" data-key="${key}" data-i="${i}">选</button></div>`).join('')+`</div>`;
-  openModal('从探索池选', grp('AI 探索',p.ai,'ai')+grp('职业成长',p.career,'career')+grp('生活创造',p.life,'life'));
+  let h='';
+  ['career','ai','life'].forEach(dir=>{
+    Object.entries(p[dir]).forEach(([cat,arr])=>{
+      h+=`<div class="src-group"><h5>${DIRS[dir]} · ${cat}</h5>`+
+        arr.map((it,i)=>`<div class="pool-item"><span>${escapeHtml(it)}</span>
+          <button class="pool-add" data-act="pool-pick" data-dir="${dir}" data-cat="${encodeURIComponent(cat)}" data-i="${i}">选</button></div>`).join('')+`</div>`;
+    });
+  });
+  openModal('从探索池选', h);
 }
-function poolItem(key,i){ return state.pool[key][i]; }
-function poolDir(key){ return key==='ai'?'ai':key==='career'?'career':'life'; }
+function poolItem(dir,cat,i){ return (state.pool[dir]&&state.pool[dir][cat]&&state.pool[dir][cat][i])||null; }
+function poolDirOf(dir){ return dir; }
 function openProjPicker(){
   const items=[];
   state.projects.forEach(p=>{ const n=p.steps.find(s=>s.status!=='已完成'); if(n) items.push({p,n}); });
@@ -700,7 +753,7 @@ function cycleStepStatus(pid,sid){
 }
 function stepToToday(pid,sid){
   const p=state.projects.find(x=>x.id===pid); if(!p) return; const s=p.steps.find(x=>x.id===sid); if(!s) return;
-  addAction({ content:s.content, dir:'other', source:'项目', plannedDate:todayStr(), status:'待安排', projectId:pid });
+  addAction({ content:s.content, dir:'other', source:'项目', dueDate:null, status:'待安排', projectId:pid, stepId:sid });
   toast('已加入今日行动台');
 }
 function projStatus(pid){
@@ -742,16 +795,22 @@ function openAddStep(pid){
 }
 
 /* ================= 探索池动作 ================= */
-function poolAdd(key,i){
-  const it=poolItem(key,i); if(!it) return;
-  addAction({ content:it, dir:poolDir(key), source:'探索池', plannedDate:todayStr(), status:'待安排' });
+function poolAdd(dir,cat,i){
+  const it=poolItem(dir,cat,i); if(!it) return;
+  addAction({ content:it, dir:dir, source:'探索池', dueDate:null, status:'待安排' });
   toast('已加入今日行动台');
 }
-function poolNew(key){
+function poolNew(dir,cat){
   openModal('添加探索项', `<div class="field"><label>想以后可能做的事</label><textarea id="pn-c"></textarea></div>
     <button class="btn" id="pn-save">添加到探索池</button>`);
   $('#pn-save').addEventListener('click',()=>{ const c=$('#pn-c').value.trim(); if(!c){toast('填点什么');return;}
-    state.pool[key].push(c); save(); closeModal(); render(); toast('已加入探索池'); });
+    if(!state.pool[dir][cat]) state.pool[dir][cat]=[]; state.pool[dir][cat].push(c); save(); closeModal(); render(); toast('已加入探索池'); });
+}
+function randomInsp(){
+  const all=flatPool(); if(all.length===0){ toast('探索池为空'); return; }
+  const pick=all[Math.floor(Math.random()*all.length)];
+  addAction({ content:pick.it, dir:pick.dir, source:'探索池', dueDate:null, status:'待安排' });
+  toast('已随机加入：'+pick.it);
 }
 
 /* ================= 成果 / 反馈 ================= */
@@ -789,7 +848,6 @@ function importData(){
 document.addEventListener('click', e=>{
   const el=e.target.closest('[data-act]');
   if(el){ handleAct(el.dataset.act, el); return; }
-  // 底部导航
   const tab=e.target.closest('.tab'); if(tab){ go(tab.dataset.view); return; }
 });
 function handleAct(act, el){
@@ -798,14 +856,21 @@ function handleAct(act, el){
     case 'toggle': toggleAction(id); break;
     case 'cycle-status': cycleStatus(id); break;
     case 'menu': openMenu(id); break;
+    case 'body-toggle':{
+      const t=todayStr(); if(!state.settings.bodyDone) state.settings.bodyDone={};
+      state.settings.bodyDone[t]=!state.settings.bodyDone[t]; save(); render(); break;
+    }
+    case 'back-today': state.viewDay=todayStr(); save(); render(); break;
+    case 'random-insp': randomInsp(); break;
     case 'anx-nothing':{ const n=state.actions.filter(a=>a.status==='已完成').length;
       openModal('你已经做了这些',`<p style="font-size:14px;line-height:1.7">${ANX.nothing}</p>
         <p style="color:var(--muted)">目前累计已完成 <b>${n}</b> 件行动。回顾它们，而不是盯着未完成列表。</p>`); break; }
     case 'anx-redesign': openModal('关于重新设计',`<p style="font-size:14px;line-height:1.7">${ANX.redesign}</p>`); break;
     // 探索池
-    case 'pool-add': poolAdd(el.dataset.key, +el.dataset.i); break;
-    case 'pool-new': poolNew(el.dataset.key); break;
-    case 'pool-pick': closeModal(); poolAdd(el.dataset.key, +el.dataset.i); break;
+    case 'pool-filter': poolFilter=el.dataset.f; render(); break;
+    case 'pool-add': poolAdd(el.dataset.dir, decodeURIComponent(el.dataset.cat), +el.dataset.i); break;
+    case 'pool-new': poolNew(el.dataset.dir, decodeURIComponent(el.dataset.cat)); break;
+    case 'pool-pick': closeModal(); poolAdd(el.dataset.dir, decodeURIComponent(el.dataset.cat), +el.dataset.i); break;
     // 项目
     case 'step-toggle': toggleStep(el.dataset.pid, el.dataset.sid); break;
     case 'step-status': cycleStepStatus(el.dataset.pid, el.dataset.sid); break;
@@ -815,11 +880,12 @@ function handleAct(act, el){
     case 'proj-edit': openProjEdit(el.dataset.pid); break;
     case 'proj-pick':{ const arr=window.__projPick||[]; const it=arr[+el.dataset.idx]; if(it){ closeModal(); stepToToday(it.pid,it.sid);} break; }
     // 记录
-    case 'rectab': recTab=el.dataset.t; render(); break;
-    case 'recfilter': recFilter=el.dataset.f; render(); break;
+    case 'recfilter': state.recFilter=el.dataset.f; save(); render(); break;
     case 'mark-ach': markAch(id); break;
     case 'edit-ach': editAch(id); break;
     case 'edit-feedback': editFeedback(id); break;
+    // 汇总
+    case 'sumtab': state.sumTab=el.dataset.t; save(); render(); break;
     // 模态内
     case 'add-self': openSelfForm(); break;
     case 'add-from-pool': openPoolPicker(); break;
@@ -836,8 +902,12 @@ function handleAct(act, el){
 const fab=document.createElement('button'); fab.className='fab'; fab.textContent='+'; fab.addEventListener('click', openAddMenu);
 document.getElementById('app').appendChild(fab);
 
-/* 顶部长按标题 -> 数据管理（导出/导入）*/
-$('#topDate').parentElement.addEventListener('dblclick', ()=>{
+/* 顶栏：日期切换（回看/规划任意一天） */
+$('#topDate').addEventListener('click', ()=> $('#datePick').click());
+$('#datePick').addEventListener('change', e=>{ state.viewDay = e.target.value || todayStr(); save(); render(); });
+$('#backToday').addEventListener('click', ()=>{ state.viewDay=todayStr(); save(); render(); });
+/* 双击标题 -> 数据管理 */
+$('.brand').addEventListener('dblclick', ()=>{
   openModal('数据管理', `<p style="color:var(--muted);font-size:13px">数据保存在本浏览器。换设备时导出处备份，再在另一台导入。</p>
     <button class="btn" id="ex-go">⬇ 导出备份（JSON）</button>
     <button class="btn ghost" id="im-go" style="margin-top:8px">⬆ 导入备份</button>
@@ -848,7 +918,7 @@ $('#topDate').parentElement.addEventListener('dblclick', ()=>{
 });
 
 render();
-
 </script>
-</body>
-</html>
+
+
+</body></html>
