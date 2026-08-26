@@ -61,6 +61,7 @@ body{
 .sec{margin:18px 0 6px;display:flex;align-items:center;justify-content:space-between}
 .sec h3{margin:0;font-size:14px;color:var(--muted);font-weight:700;letter-spacing:1px}
 .sec .count{font-size:12px;color:var(--muted)}
+.sub-head{font-size:12px;color:var(--muted);font-weight:700;margin:10px 0 2px;letter-spacing:.5px}
 
 /* action item */
 .act{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
@@ -78,6 +79,7 @@ body{
 .tag{font-size:11px;padding:2px 8px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-weight:600}
 .tag.src{background:#eef0f3;color:#6b7280}
 .tag.due{background:var(--warn-soft);color:var(--warn)}
+.tag.due-add{background:#faf8f3;color:var(--muted);border:1px dashed var(--line);cursor:pointer}
 .tag.proj{background:#efeaf6;color:var(--other)}
 .tag.ach{background:#fbeecb;color:#9a7b1f}
 .status-pill{font-size:11px;padding:2px 9px;border-radius:999px;cursor:pointer;border:1px solid var(--line)}
@@ -92,7 +94,7 @@ body{
 .act-sub{font-size:12px;color:var(--muted);margin-top:5px}
 
 .empty{color:var(--muted);font-size:13.5px;text-align:center;padding:26px 10px;
-  background:var(--card);border:1px dashed var(--line);border-radius:var(--radius)}
+  background:var(--card);border:1px dashed var(--line);border-radius:var(--radius);line-height:1.7}
 
 /* big add button */
 .fab{position:fixed;right:18px;bottom:74px;width:54px;height:54px;border-radius:50%;
@@ -106,16 +108,17 @@ body{
 .tab{flex:1;background:none;border:none;padding:9px 0 7px;display:flex;flex-direction:column;
   align-items:center;gap:2px;color:var(--muted);font-size:11px;cursor:pointer}
 .tab .ti{font-size:18px;line-height:1}
-.tab.active{color:var(--accent)}
+.tab.active{color:var(--accent);font-weight:600}
 
 /* pool */
 .pool-cat{margin:14px 0 4px}
 .pool-cat h4{margin:0 0 6px;font-size:13px;color:var(--accent);font-weight:700}
 .pool-item{display:flex;align-items:center;justify-content:space-between;
   background:var(--card);border:1px solid var(--line);border-radius:12px;
-  padding:10px 12px;margin:6px 0;font-size:14px}
+  padding:10px 12px;margin:6px 0;font-size:14px;gap:8px}
 .pool-add{background:var(--accent-soft);color:var(--accent);border:none;border-radius:8px;
   padding:5px 10px;font-size:12px;font-weight:600;cursor:pointer;flex:none}
+.pool-add.added{background:#eee;color:#999;cursor:default}
 .link-add{background:none;border:1px dashed var(--accent);color:var(--accent);
   border-radius:10px;padding:7px 10px;width:100%;font-size:13px;cursor:pointer;margin-top:6px}
 
@@ -135,10 +138,19 @@ body{
 .step .chk.on{background:var(--accent)}
 .step .txt{flex:1}
 .step.done .txt{text-decoration:line-through;color:var(--muted)}
+.step-ed{background:none;border:none;color:var(--muted);font-size:15px;cursor:pointer;flex:none;padding:2px 4px}
+.step-add{background:var(--accent-soft);color:var(--accent);border:none;border-radius:7px;
+  padding:3px 8px;font-size:11px;font-weight:600;cursor:pointer;flex:none}
 .proj-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .mini{background:#fff;border:1px solid var(--line);border-radius:8px;padding:5px 10px;
   font-size:12px;color:var(--ink);cursor:pointer}
 .mini.acc{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.evt-list{margin-top:8px}
+.evt{display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-top:1px solid var(--line);font-size:13px}
+.evt-main{flex:1;min-width:0}
+.evt-text{line-height:1.5}
+.evt-date{font-size:11px;color:var(--muted);margin-top:2px}
+.evt-ops{display:flex;gap:2px;flex:none}
 
 /* records */
 .tabs2{display:flex;gap:6px;margin:6px 0 12px;flex-wrap:wrap}
@@ -162,6 +174,24 @@ body{
 .kpi .l{font-size:11px;color:var(--muted)}
 .report ul{margin:6px 0;padding-left:18px;font-size:13.5px}
 .report li{margin:3px 0}
+
+/* calendar */
+.cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.cal-nav{width:38px;height:38px;border:1px solid var(--line);background:#fff;border-radius:11px;
+  font-size:20px;cursor:pointer;color:var(--ink);line-height:1}
+.cal-title{font-size:16px;font-weight:700}
+.cal-dow{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:11px;color:var(--muted);margin-bottom:6px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-day{height:44px;border:none;background:#fff;border-radius:11px;font-size:14px;cursor:pointer;
+  color:var(--ink);position:relative}
+.cal-day.today{background:var(--accent-soft);color:var(--accent);font-weight:700}
+.cal-day.sel{background:var(--accent);color:#fff;font-weight:700}
+.cal-day.dot::after{content:'';position:absolute;bottom:5px;left:50%;transform:translateX(-50%);
+  width:5px;height:5px;border-radius:50%;background:var(--warn)}
+.cal-day.sel.dot::after{background:#fff}
+
+.insp{background:var(--accent-soft);color:var(--accent);border:none;border-radius:999px;
+  padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;margin:4px 0 2px}
 
 /* modal */
 .modal-mask{position:fixed;inset:0;background:rgba(40,35,25,.45);z-index:40;
@@ -188,9 +218,6 @@ body{
 .src-group{margin:10px 0}
 .src-group h5{margin:6px 0;font-size:13px;color:var(--accent)}
 
-.insp{background:var(--accent-soft);color:var(--accent);border:none;border-radius:999px;
-  padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;margin:4px 0 2px}
-
 /* toast */
 .toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);
   background:rgba(40,35,25,.9);color:#fff;padding:10px 18px;border-radius:999px;
@@ -203,26 +230,19 @@ body{
   <header class="topbar">
     <div class="brand" title="双击：数据管理">我的成长行动台</div>
     <div class="top-right">
-      <button class="today-pill" id="topDate">8月23日</button>
+      <button class="today-pill" id="topDate">8月26日</button>
       <button class="today-pill" id="backToday" hidden="">今天</button>
-      <input type="date" id="datePick" hidden="">
     </div>
   </header>
-
-  <main id="view">
-    <div class="reminder">
-      <div class="r-title">今日提醒</div>
-      <div class="r-text">不需要等准备完美再开始，先做出第一个版本。</div>
-    </div><div class="act" style="background:var(--card)">
-      <div class="act-top">
-        <div class="act-check " data-act="body-toggle"></div>
-        <div class="act-main"><div class="act-content">今日身体计划已完成</div>
-        <div class="act-tags"><span class="tag src">身体 · 轻量</span></div></div>
-      </div></div><div class="sec"><h3>今日行动</h3><span class="count">0 项</span></div><div class="empty">今天还没有安排。点右下角 + ，从探索池、项目下一步或自己的念头里，挑一件就好。</div><button class="insp" data-act="random-insp">🎲 随机挑一个灵感加进行动台</button><div class="anx-actions">
-    <button class="anx-btn" data-act="anx-nothing">我觉得什么都没做</button>
-    <button class="anx-btn" data-act="anx-redesign">想重新设计系统</button>
-  </div></main>
-
+  <main id="view"><div class="reminder"><div class="r-title">今日提醒</div><div class="r-text">重要的不是做得多，而是你真的动了一步。</div></div><div class="act" style="background:var(--card)">
+        <div class="act-top">
+          <div class="act-check " data-act="body-toggle"></div>
+          <div class="act-main"><div class="act-content">今日身体计划已完成</div>
+          <div class="act-tags"><span class="tag src">身体 · 轻量</span></div></div>
+        </div></div><div class="sec"><h3>今日行动</h3><span class="count">0 项</span></div><div class="empty">这一天还没有行动。点右下角 + ，从探索池、项目下一步或自己的念头里挑一件。</div><button class="insp" data-act="random-insp">🎲 随机挑一个灵感加进行动台</button><div class="anx-actions">
+      <button class="anx-btn" data-act="anx-nothing">我觉得什么都没做</button>
+      <button class="anx-btn" data-act="anx-redesign">想重新设计系统</button>
+    </div></main>
   <nav class="tabbar">
     <button class="tab active" data-view="home"><span class="ti">◈</span><span>行动台</span></button>
     <button class="tab" data-view="pool"><span class="ti">✿</span><span>探索池</span></button>
@@ -231,21 +251,18 @@ body{
     <button class="tab" data-view="summary"><span class="ti">▦</span><span>汇总</span></button>
   </nav>
 <button class="fab">+</button></div>
-
 <div id="modal" class="modal-mask" hidden="">
   <div class="modal">
     <div class="modal-head"><span id="modalTitle"></span><button class="modal-x" id="modalX">×</button></div>
     <div class="modal-body" id="modalBody"></div>
   </div>
 </div>
-
 <div id="toast" class="toast" hidden=""></div>
-
 <script>
-/* ============ 个人成长工作台 · 混合版 ============
-   首页：V2「我的行动台」（今日提醒 + 焦虑提醒 + 来源 + 截止日期可选）
-   第2-5层：恢复 V1（丰富探索池 / 项目库 / 全部历史记录 / 周月汇总）
-   交互修正：弹窗默认隐藏、日期可切换回看、导出导入、全部历史按日期分组
+/* ============ 个人成长工作台 · 混合版 v2 ============
+   首页：V2「我的行动台」（今日提醒 + 焦虑提醒 + 来源分组 + 开始/截止日期）
+   第2-5层：V1（丰富探索池 / 项目库 / 全部历史记录 / 周月汇总）
+   交互：自绘月历选择日期、探索池去重、项目步骤可编辑、记录按日期归档
 =================================================== */
 const STORE_KEY = 'growth_workbench_v2';
 const OLD_KEY = 'growth_workbench_v1';
@@ -254,7 +271,6 @@ const DIRS = { career:'职业', ai:'AI', life:'生活', other:'其他' };
 const DIR_COLOR = { career:'var(--career)', ai:'var(--ai)', life:'var(--life)', other:'var(--other)' };
 const STATUSES = ['想法','待安排','进行中','已完成','暂停'];
 
-/* 今日提醒：每天轮换展示一条，降低焦虑、增加行动反馈 */
 const TODAY_REMINDERS = [
   '今天不需要解决所有问题，只需要推进一个小步骤。',
   '记录不是为了监督自己，而是为了看见自己已经在前进。',
@@ -265,7 +281,6 @@ const TODAY_REMINDERS = [
   '重要的不是做得多，而是你真的动了一步。',
   '把期待放进探索池，把今天留给一个行动。'
 ];
-/* 焦虑提醒 */
 const ANX = {
   many: '看到很多想做的事情，说明你对生活有期待，不代表你落后。今天只需要选择当前最重要的一件。',
   nothing: '回顾已经完成的事情，而不是只看未完成列表。你已经走过的路，比想象的更多。',
@@ -296,7 +311,6 @@ function seedPool(){
     }
   };
 }
-/* 所有探索项（用于随机灵感） */
 function flatPool(){
   const out=[]; const p=state.pool;
   Object.keys(p).forEach(dir=>{ Object.values(p[dir]).forEach(arr=>arr.forEach(it=>out.push({it,dir}))); });
@@ -337,6 +351,16 @@ function seedProjects(){
         {id:uid(),content:'每周挑一个小体验',status:'待安排'},
         {id:uid(),content:'每月至少完成 2 次新体验',status:'待安排'},
         {id:uid(),content:'记录哪些体验值得再次尝试',status:'待安排'}
+      ]},
+    { id:uid(), name:'家具需求治理', goal:'用统一 AI 规则治理家具采购需求与供应商报价，形成可复用的需求审核规则', stage:'抽历史项目中',
+      status:'进行中', events:[], steps:[
+        {id:uid(),content:'抽 20～30 个历史家具项目',status:'待安排'},
+        {id:uid(),content:'收集“原需求 Excel + 各供应商报价”',status:'待安排'},
+        {id:uid(),content:'用统一 AI 规则批量拆解需求完整性、报价可比性和异常点',status:'待安排'},
+        {id:uid(),content:'把每个项目结构化沉淀',status:'待安排'},
+        {id:uid(),content:'从共性里形成《需求审核规则 V0.1》',status:'待安排'},
+        {id:uid(),content:'新项目开始按照 V0.1 审核',status:'待安排'},
+        {id:uid(),content:'每出现一个新问题，就反向更新规则',status:'待安排'}
       ]}
   ];
 }
@@ -362,13 +386,13 @@ function migrateV1(){
     const o=JSON.parse(raw); const st=freshState();
     (o.history||[]).forEach(r=>{
       st.actions.push({ id:uid(), content:r.content, dir:r.dir||'other', source:r.projectId?'项目':'临时想法',
-        dueDate:null, status:r.done?'已完成':'待安排', projectId:r.projectId||null, stepId:null,
+        startDate:r.date||todayStr(), dueDate:null, status:r.done?'已完成':'待安排', projectId:r.projectId||null, stepId:null,
         createdAt:r.date, completedAt:r.completedAt||null, feedback:r.feedback||'', isAchievement:!!r.isAchievement, achDetail:r.achDetail||'' });
     });
     (o.today&&o.today.items||[]).forEach(it=>{
       if(it.done) return;
       st.actions.push({ id:uid(), content:it.text, dir:it.dir||'other', source:it.projectId?'项目':'临时想法',
-        dueDate:null, status:'待安排', projectId:it.projectId||null, stepId:null,
+        startDate:o.today.date||todayStr(), dueDate:null, status:'待安排', projectId:it.projectId||null, stepId:null,
         createdAt:o.today.date, completedAt:null, feedback:'', isAchievement:false, achDetail:'' });
     });
     if(o.projects) st.projects=o.projects;
@@ -380,6 +404,27 @@ function load(){
   try{ const raw=localStorage.getItem(STORE_KEY); if(raw){ const s=JSON.parse(raw);
     if(!s.actions) s.actions=[]; if(!s.pool) s.pool=seedPool(); if(!s.projects) s.projects=seedProjects();
     if(!s.settings) s.settings={bodyDone:{}}; if(!s.view) s.view='home'; if(!s.viewDay) s.viewDay=todayStr();
+    // 旧数据补齐 startDate（老版本用 plannedDate / createdAt）
+    s.actions.forEach(a=>{ if(!a.startDate){ a.startDate = a.plannedDate || a.createdAt || a.dueDate || todayStr(); } delete a.plannedDate; });
+    if(!s.recFilter) s.recFilter='all'; if(!s.sumTab) s.sumTab='week';
+    // 规范化项目步骤：兼容旧数据结构（字符串 / text/title 字段），修复 undefined
+    s.projects.forEach(p=>{ if(!Array.isArray(p.steps)) p.steps=[];
+      if(!Array.isArray(p.events)) p.events=[];
+      p.steps=p.steps.map(ss=>{ if(typeof ss==='string') return {id:uid(),content:ss,status:'待安排'};
+        if(!ss.id) ss.id=uid(); if(!ss.content) ss.content=ss.text||ss.title||ss.name||'';
+        if(!ss.status) ss.status='待安排'; return ss; }); });
+    if(!s.projects.some(p=>p.name==='家具需求治理')){
+      s.projects.push({ id:uid(), name:'家具需求治理', goal:'用统一 AI 规则治理家具采购需求与供应商报价，形成可复用的需求审核规则', stage:'抽历史项目中',
+        status:'进行中', events:[], steps:[
+          {id:uid(),content:'抽 20～30 个历史家具项目',status:'待安排'},
+          {id:uid(),content:'收集“原需求 Excel + 各供应商报价”',status:'待安排'},
+          {id:uid(),content:'用统一 AI 规则批量拆解需求完整性、报价可比性和异常点',status:'待安排'},
+          {id:uid(),content:'把每个项目结构化沉淀',status:'待安排'},
+          {id:uid(),content:'从共性里形成《需求审核规则 V0.1》',status:'待安排'},
+          {id:uid(),content:'新项目开始按照 V0.1 审核',status:'待安排'},
+          {id:uid(),content:'每出现一个新问题，就反向更新规则',status:'待安排'}
+        ] });
+    }
     return s; } }catch(e){}
   const m=migrateV1(); if(m){ return m; }
   return freshState();
@@ -390,6 +435,7 @@ let state = load();
 /* ---------- 视图状态 ---------- */
 let view = state.view || 'home';
 let poolFilter = 'all';
+let calCursor = todayStr().slice(0,7);
 
 function go(v){ view=v; state.view=v; save(); render(); }
 function render(){
@@ -405,71 +451,70 @@ function render(){
   window.scrollTo(0,0);
 }
 
-/* ================= 首页：我的行动台（V2）================= */
+/* ================= 首页：我的行动台 ================= */
 function renderHome(){
-  const t = state.viewDay;
+  const vd = state.viewDay;
   const today = todayStr();
+  const isToday = (vd===today);
   const actions = state.actions;
 
-  // 回看某一天
-  if(t !== today){
-    const done = actions.filter(a=> (a.completedAt||'').slice(0,10)===t);
-    let html = `<div class="reminder"><div class="r-title">回顾 · ${dateLabel(t)}</div>
-      <div class="r-text">这一天完成的行动如下。点右上角「今天」返回当前。</div></div>`;
-    html += `<div class="sec"><h3>当天完成</h3><span class="count">${done.length} 件</span></div>`;
-    html += done.length ? done.map(a=>actCard(a,true)).join('') : `<div class="empty">这一天没有完成记录。</div>`;
-    html += `<button class="btn ghost" data-act="back-today" style="margin-top:14px">← 回到今天</button>`;
-    return html;
+  // 顶部提示
+  let html = '';
+  if(isToday){
+    html += `<div class="reminder"><div class="r-title">今日提醒</div><div class="r-text">${TODAY_REMINDERS[dayOfYear()%TODAY_REMINDERS.length]}</div></div>`;
+  } else {
+    const past = vd < today;
+    html += `<div class="reminder"><div class="r-title">${past?'回顾':'规划'} · ${dateLabel(vd)}</div>
+      <div class="r-text">${past?'这是过去的一天，可查看当天行动。':'这是未来的一天，可提前规划。'}点右上角日历，或「今天」返回。</div></div>`;
   }
 
-  const reminder = TODAY_REMINDERS[(dayOfYear()%TODAY_REMINDERS.length)];
-  const noDateOrToday = a => !a.dueDate || a.dueDate===today;
-  const todayItems = actions.filter(a=> a.status!=='已完成' && noDateOrToday(a));
-  const overdue = actions.filter(a=> a.status!=='已完成' && isBefore(a.dueDate, today));
-  const upcoming = actions.filter(a=> a.status!=='已完成' && isBefore(today, a.dueDate)).sort((x,y)=>x.dueDate<y.dueDate?-1:1);
-  const doneToday = actions.filter(a=> a.status==='已完成' && (a.completedAt||'').slice(0,10)===today);
+  // 当日行动 = 未完成 且 startDate <= 当前查看日期（从开始日起持续展示，直到完成）
+  const active = actions.filter(a=>a.status!=='已完成' && a.startDate && a.startDate<=vd);
+  const upcoming = actions.filter(a=>a.status!=='已完成' && a.startDate && a.startDate>vd).sort((x,y)=>x.startDate<y.startDate?-1:1);
+  const doneOn = actions.filter(a=>a.status==='已完成' && (a.completedAt||'').slice(0,10)===vd);
 
-  let html = `
-    <div class="reminder">
-      <div class="r-title">今日提醒</div>
-      <div class="r-text">${reminder}</div>
-    </div>`;
-  if(todayItems.length>=5) html += `<div class="anx-banner">${ANX.many}</div>`;
+  if(isToday){
+    if(active.length>=5) html += `<div class="anx-banner">${ANX.many}</div>`;
+    const bodyDone = (state.settings.bodyDone && state.settings.bodyDone[today]) ? 'on' : '';
+    html += `<div class="act" style="background:var(--card)">
+        <div class="act-top">
+          <div class="act-check ${bodyDone}" data-act="body-toggle">${bodyDone?'✓':''}</div>
+          <div class="act-main"><div class="act-content">今日身体计划已完成</div>
+          <div class="act-tags"><span class="tag src">身体 · 轻量</span></div></div>
+        </div></div>`;
+  }
 
-  // 身体计划（V1 轻量入口，不记录明细）
-  const bodyDone = (state.settings.bodyDone && state.settings.bodyDone[today]) ? 'on' : '';
-  html += `<div class="act" style="background:var(--card)">
-      <div class="act-top">
-        <div class="act-check ${bodyDone}" data-act="body-toggle">${bodyDone?'✓':''}</div>
-        <div class="act-main"><div class="act-content">今日身体计划已完成</div>
-        <div class="act-tags"><span class="tag src">身体 · 轻量</span></div></div>
-      </div></div>`;
+  // 分组：探索池灵感 / 项目待办 / 临时想法
+  const fromPool = active.filter(a=>a.source==='探索池');
+  const fromProj = active.filter(a=>a.source==='项目');
+  const fromSelf = active.filter(a=>a.source!=='探索池' && a.source!=='项目');
 
-  // 今日行动
-  html += `<div class="sec"><h3>今日行动</h3><span class="count">${todayItems.length} 项</span></div>`;
-  if(todayItems.length===0) html += `<div class="empty">今天还没有安排。点右下角 + ，从探索池、项目下一步或自己的念头里，挑一件就好。</div>`;
-  else html += todayItems.map(a=>actCard(a)).join('');
+  html += `<div class="sec"><h3>${isToday?'今日行动':'当日行动'}</h3><span class="count">${active.length} 项</span></div>`;
+  if(active.length===0){
+    html += `<div class="empty">这一天还没有行动。点右下角 + ，从探索池、项目下一步或自己的念头里挑一件。</div>`;
+  } else {
+    if(fromPool.length){ html += `<div class="sub-head">✿ 探索池灵感</div>` + fromPool.map(a=>actCard(a)).join(''); }
+    if(fromProj.length){ html += `<div class="sub-head">▣ 项目待办</div>` + fromProj.map(a=>actCard(a)).join(''); }
+    if(fromSelf.length){ html += `<div class="sub-head">✎ 临时想法</div>` + fromSelf.map(a=>actCard(a)).join(''); }
+  }
 
-  // 不知道做什么
   html += `<button class="insp" data-act="random-insp">🎲 随机挑一个灵感加进行动台</button>`;
 
-  if(overdue.length){
-    html += `<div class="sec"><h3>还没做的（之前计划）</h3><span class="count">${overdue.length} 项</span></div>`;
-    html += overdue.map(a=>actCard(a)).join('');
-  }
   if(upcoming.length){
-    html += `<div class="sec"><h3>即将到来</h3><span class="count">${upcoming.length} 项</span></div>`;
+    html += `<div class="sec"><h3>即将到来（${dateLabel(upcoming[0].startDate)} 起）</h3><span class="count">${upcoming.length} 项</span></div>`;
     html += upcoming.map(a=>actCard(a)).join('');
   }
-  if(doneToday.length){
-    html += `<div class="sec"><h3>今天已完成</h3><span class="count">${doneToday.length} 件 ✓</span></div>`;
-    html += doneToday.map(a=>actCard(a,true)).join('');
+  if(doneOn.length){
+    html += `<div class="sec"><h3>当天完成</h3><span class="count">${doneOn.length} 件 ✓</span></div>`;
+    html += doneOn.map(a=>actCard(a,true)).join('');
   }
 
-  html += `<div class="anx-actions">
-    <button class="anx-btn" data-act="anx-nothing">我觉得什么都没做</button>
-    <button class="anx-btn" data-act="anx-redesign">想重新设计系统</button>
-  </div>`;
+  if(isToday){
+    html += `<div class="anx-actions">
+      <button class="anx-btn" data-act="anx-nothing">我觉得什么都没做</button>
+      <button class="anx-btn" data-act="anx-redesign">想重新设计系统</button>
+    </div>`;
+  }
   return html;
 }
 
@@ -478,7 +523,10 @@ function actCard(a, doneReadonly){
   const srcTag = a.source?`<span class="tag src">${escapeHtml(a.source)}</span>`:'';
   const proj = a.projectId? state.projects.find(p=>p.id===a.projectId):null;
   const projTag = proj?`<span class="tag proj">${escapeHtml(proj.name)}</span>`:'';
-  const dueTag = a.dueDate?`<span class="tag due">${isBefore(a.dueDate,todayStr())?'已逾期 · ':''}${dateLabel(a.dueDate)}前</span>`:'';
+  const startTag = (a.startDate && a.startDate!==state.viewDay) ? `<span class="tag">${dateLabel(a.startDate)}起</span>`:'';
+  const dueTag = a.dueDate
+    ? `<span class="tag due" data-act="set-due" data-id="${a.id}">${isBefore(a.dueDate, state.viewDay)?'已逾期 · ':''}${dateLabel(a.dueDate)}截止</span>`
+    : `<span class="tag due-add" data-act="set-due" data-id="${a.id}">＋截止日期</span>`;
   const achTag = a.isAchievement?`<span class="tag ach">成果</span>`:'';
   const sub=[]; if(a.feedback) sub.push('反馈：'+a.feedback);
   return `<div class="act ${done?'done':''}">
@@ -486,9 +534,7 @@ function actCard(a, doneReadonly){
       <div class="act-check ${done?'on':''}" data-act="toggle" data-id="${a.id}">${done?'✓':''}</div>
       <div class="act-main">
         <div class="act-content">${escapeHtml(a.content)}</div>
-        <div class="act-tags">${srcTag}${projTag}${dueTag}${achTag}
-          <span class="status-pill st-${a.status}" data-act="cycle-status" data-id="${a.id}">${a.status}</span>
-        </div>
+        <div class="act-tags">${srcTag}${projTag}${startTag}${dueTag}${achTag}</div>
         ${sub.length?`<div class="act-sub">${escapeHtml(sub.join(' · '))}</div>`:''}
       </div>
       <div class="act-menu"><button data-act="menu" data-id="${a.id}">⋯</button></div>
@@ -496,7 +542,10 @@ function actCard(a, doneReadonly){
   </div>`;
 }
 
-/* ================= 探索池（V1 丰富子类）================= */
+/* ================= 探索池 ================= */
+function poolInActive(item){
+  return state.actions.some(a=>a.source==='探索池' && a.content===item && a.status!=='已完成');
+}
 function renderPool(){
   const p=state.pool;
   const dirKeys = poolFilter==='all' ? ['career','ai','life'] : [poolFilter];
@@ -504,31 +553,45 @@ function renderPool(){
     ['all','career','ai','life'].map(f=>`<button class="${poolFilter===f?'on':''}" data-act="pool-filter" data-f="${f}">${f==='all'?'全部':DIRS[f]}</button>`).join('')+
     `</div>`;
   let html = filterBar + `<div class="reminder"><div class="r-title">这是探索池</div>
-    <div class="r-text">不是待办，是“以后可能想做”。随便看看，有感觉就加进行动台，没感觉就放着——这里不产生未完成压力。</div></div>`;
+    <div class="r-text">不是待办，是“以后可能想做”。有感觉就加进行动台；已经加过的会显示「已在行动台」，不会重复。</div></div>`;
   dirKeys.forEach(dir=>{
     html += `<div class="sec"><h3>${DIRS[dir]}</h3></div>`;
     Object.entries(p[dir]).forEach(([cat, arr])=>{
       html += `<div class="pool-cat"><h4>${cat}</h4>`;
-      html += arr.map((it,i)=>`<div class="pool-item"><span>${escapeHtml(it)}</span>
-        <button class="pool-add" data-act="pool-add" data-dir="${dir}" data-cat="${encodeURIComponent(cat)}" data-i="${i}">加入行动台</button></div>`).join('');
+      html += arr.map((it,i)=>{
+        const added = poolInActive(it);
+        return `<div class="pool-item"><span>${escapeHtml(it)}${added?' <span class="tag src" style="margin-left:4px">已在行动台</span>':''}</span>
+          <button class="pool-add ${added?'added':''}" data-act="pool-add" data-dir="${dir}" data-cat="${encodeURIComponent(cat)}" data-i="${i}">${added?'已在行动台':'加入行动台'}</button></div>`;
+      }).join('');
       html += `<button class="link-add" data-act="pool-new" data-dir="${dir}" data-cat="${encodeURIComponent(cat)}">+ 添加一条到「${cat}」</button></div>`;
     });
   });
   return html;
 }
 
-/* ================= 项目库（V1）================= */
+/* ================= 项目库 ================= */
 function renderProjects(){
-  if(state.projects.length===0) return `<div class="empty">还没有项目。项目是“长期一点的事”。点右下角 + 新建一个。</div>`;
-  return state.projects.map(proj=>{
+  let head = `<div class="sec"><h3>项目库</h3><button class="mini acc" data-act="proj-new" style="margin-left:auto">＋新增项目</button></div>`;
+  if(state.projects.length===0) return head + `<div class="empty">还没有项目。项目是“长期一点的事”。点「＋新增项目」建一个。</div>`;
+  return head + state.projects.map(proj=>{
     const total=proj.steps.length;
     const done=proj.steps.filter(s=>s.status==='已完成').length;
     const pct= total? Math.round(done/total*100):0;
-    const next=proj.steps.find(s=>s.status!=='已完成');
-    const steps=proj.steps.map(s=>`<div class="step ${s.status==='已完成'?'done':''}">
-      <div class="chk ${s.status==='已完成'?'on':''}" data-act="step-toggle" data-pid="${proj.id}" data-sid="${s.id}">${s.status==='已完成'?'✓':''}</div>
-      <div class="txt">${escapeHtml(s.content)} <span class="status-pill st-${s.status}" data-act="step-status" data-pid="${proj.id}" data-sid="${s.id}">${s.status}</span></div>
-    </div>`).join('');
+    const steps=proj.steps.map(s=>{
+      const sd = s.status==='已完成';
+      return `<div class="step ${sd?'done':''}">
+      <div class="chk ${sd?'on':''}" data-act="step-toggle" data-pid="${proj.id}" data-sid="${s.id}">${sd?'✓':''}</div>
+      <div class="txt">${escapeHtml(s.content)}</div>
+      ${!sd?`<button class="step-add" data-act="step-to-today" data-pid="${proj.id}" data-sid="${s.id}">＋加入</button>`:''}
+      <button class="step-ed" data-act="step-edit" data-pid="${proj.id}" data-sid="${s.id}" title="编辑">✎</button>
+    </div>`;
+    }).join('');
+    const evs=(proj.events||[]).map(ev=>`<div class="evt">
+      <div class="evt-main"><div class="evt-text">${escapeHtml(ev.text)}</div><div class="evt-date">${dateLabel(ev.date)}</div></div>
+      <div class="evt-ops">
+        <button class="step-ed" data-act="proj-edit-event" data-pid="${proj.id}" data-eid="${ev.id}" title="编辑">✎</button>
+        <button class="step-ed" data-act="proj-del-event" data-pid="${proj.id}" data-eid="${ev.id}" title="删除">🗑</button>
+      </div></div>`).join('');
     return `<div class="proj">
       <div class="proj-head"><div><div class="proj-name">${escapeHtml(proj.name)}</div>
         <div class="proj-goal">${escapeHtml(proj.goal||'')}</div></div>
@@ -536,8 +599,9 @@ function renderProjects(){
       <div class="proj-meta"><span>阶段：${escapeHtml(proj.stage||'—')}</span><span>进度 ${done}/${total}</span></div>
       <div class="bar"><i style="width:${pct}%"></i></div>
       ${steps}
+      <div class="evt-list">${evs}</div>
+      <button class="mini" data-act="proj-add-event" data-pid="${proj.id}">＋记录完成事件</button>
       <div class="proj-actions">
-        ${next?`<button class="mini acc" data-act="step-to-today" data-pid="${proj.id}" data-sid="${next.id}">把下一步加入今日</button>`:''}
         <button class="mini" data-act="proj-add-step" data-pid="${proj.id}">+ 拆解动作</button>
         <button class="mini" data-act="proj-edit" data-pid="${proj.id}">编辑</button>
       </div>
@@ -545,15 +609,18 @@ function renderProjects(){
   }).join('');
 }
 
-/* ================= 记录（V1：全部历史）================= */
+/* ================= 记录（全部历史）================= */
 function renderRecords(){
   const done = state.actions.filter(a=>a.status==='已完成').slice().sort((x,y)=>(y.completedAt||'').localeCompare(x.completedAt||''));
   let html=`<div class="sec"><h3>全部完成记录</h3><span class="count">共 ${done.length} 条 · 跨所有日期</span></div>`;
-  html+=`<p style="color:var(--muted);font-size:12.5px;margin:0 0 8px">这是你做过的所有事，按日期分组。这里只是“看见”，不考核。</p>`;
+  html+=`<p style="color:var(--muted);font-size:12.5px;margin:0 0 8px">这里是你做过的所有事，按日期自动归档，只“看见”、不考核。</p>`;
   const filters=['all','career','ai','life','other'];
   html+=`<div class="tabs2">`+filters.map(f=>`<button class="${state.recFilter===f?'on':''}" data-act="recfilter" data-f="${f}">${f==='all'?'全部':DIRS[f]}</button>`).join('')+`</div>`;
   const list=done.filter(a=>state.recFilter==='all'||a.dir===state.recFilter);
-  if(list.length===0){ html+=`<div class="empty">还没有完成记录。去行动台勾选一件吧。</div>`; return html; }
+  if(list.length===0){
+    html+=`<div class="empty">还没有完成记录。<br>去「行动台」勾选完成一件事，它就会自动出现在这里。</div>`;
+    return html;
+  }
   const groups={};
   list.forEach(a=>{ const d=(a.completedAt||'').slice(0,10)||'未知'; (groups[d]=groups[d]||[]).push(a); });
   Object.keys(groups).sort((a,b)=>b.localeCompare(a)).forEach(d=>{
@@ -578,7 +645,7 @@ function recRow(a){
   </div>`;
 }
 
-/* ================= 汇总（周报 / 月报 / 成果）================= */
+/* ================= 汇总 ================= */
 function renderSummary(){
   const tabs=`<div class="tabs2">
     <button class="${state.sumTab==='week'?'on':''}" data-act="sumtab" data-t="week">周报</button>
@@ -632,7 +699,7 @@ function renderAch(){
 
 /* ================= 行动台 CRUD ================= */
 function addAction(obj){
-  state.actions.push(Object.assign({ id:uid(), source:'临时想法', dir:'other', dueDate:null,
+  state.actions.push(Object.assign({ id:uid(), source:'临时想法', dir:'other', startDate:state.viewDay, dueDate:null,
     status:'待安排', projectId:null, stepId:null, createdAt:todayStr(), completedAt:null,
     feedback:'', isAchievement:false, achDetail:'' }, obj));
   save(); render();
@@ -667,24 +734,20 @@ function formFields(a){
       <div class="pick-row" id="f-dir">
         ${Object.entries(DIRS).map(([k,v])=>`<div class="pick ${!a.dir||a.dir===k?'on':''}" data-v="${k}">${v}</div>`).join('')}
       </div></div>
-    <div class="field"><label>截止日期（可选，最晚什么时候完成）</label><input id="f-due" type="date" value="${a.dueDate||''}"></div>
-    <div class="field"><label>状态</label>
-      <div class="pick-row" id="f-status">
-        ${STATUSES.map(s=>`<div class="pick ${!a.status||a.status===s?'on':''}" data-v="${s}">${s}</div>`).join('')}
-      </div></div>`;
+    <div class="field"><label>开始日期（哪天开始做，默认当天）</label><input id="f-start" type="date" value="${a.startDate||state.viewDay}"></div>
+    <div class="field"><label>截止日期（可选，最晚什么时候完成）</label><input id="f-due" type="date" value="${a.dueDate||''}"></div>`;
 }
 function bindFormPicks(){
-  $all('#f-dir .pick, #f-status .pick').forEach(p=>p.addEventListener('click',()=>{
+  $all('#f-dir .pick').forEach(p=>p.addEventListener('click',()=>{
     const grp=p.parentElement; $all('.pick',grp).forEach(x=>x.classList.remove('on')); p.classList.add('on');
   }));
 }
 function readForm(){
   const dir=($('#f-dir .pick.on')||{}).dataset?.v||'other';
-  const status=($('#f-status .pick.on')||{}).dataset?.v||'待安排';
-  return { content:$('#f-content').value.trim(), dir, dueDate:$('#f-due').value||null, status };
+  return { content:$('#f-content').value.trim(), dir, startDate:$('#f-start').value||state.viewDay, dueDate:$('#f-due').value||null };
 }
 function openAddMenu(){
-  openModal('添加今日行动', `
+  openModal('添加行动', `
     <p style="color:var(--muted);font-size:13px;margin-top:0">从哪来都可以，挑一个开始：</p>
     <button class="btn" data-act="add-self">✎ 自己新增一条</button>
     <button class="btn ghost" data-act="add-from-pool">✿ 从探索池选</button>
@@ -705,14 +768,16 @@ function openPoolPicker(){
   ['career','ai','life'].forEach(dir=>{
     Object.entries(p[dir]).forEach(([cat,arr])=>{
       h+=`<div class="src-group"><h5>${DIRS[dir]} · ${cat}</h5>`+
-        arr.map((it,i)=>`<div class="pool-item"><span>${escapeHtml(it)}</span>
-          <button class="pool-add" data-act="pool-pick" data-dir="${dir}" data-cat="${encodeURIComponent(cat)}" data-i="${i}">选</button></div>`).join('')+`</div>`;
+        arr.map((it,i)=>{
+          const added=poolInActive(it);
+          return `<div class="pool-item"><span>${escapeHtml(it)}</span>
+            <button class="pool-add ${added?'added':''}" data-act="pool-pick" data-dir="${dir}" data-cat="${encodeURIComponent(cat)}" data-i="${i}">${added?'已在行动台':'选'}</button></div>`;
+        }).join('')+`</div>`;
     });
   });
   openModal('从探索池选', h);
 }
 function poolItem(dir,cat,i){ return (state.pool[dir]&&state.pool[dir][cat]&&state.pool[dir][cat][i])||null; }
-function poolDirOf(dir){ return dir; }
 function openProjPicker(){
   const items=[];
   state.projects.forEach(p=>{ const n=p.steps.find(s=>s.status!=='已完成'); if(n) items.push({p,n}); });
@@ -728,18 +793,28 @@ function openEditForm(id){
     <button class="btn ghost" id="delEdit" style="margin-top:8px">删除这条</button>`);
   bindFormPicks();
   $('#saveEdit').addEventListener('click',()=>{ const f=readForm(); if(!f.content){toast('内容不能为空');return;}
-    Object.assign(a,f); if(f.status==='已完成'&&!a.completedAt)a.completedAt=new Date().toISOString(); save(); closeModal(); render(); });
+    Object.assign(a,f); save(); closeModal(); render(); });
   $('#delEdit').addEventListener('click',()=>{ if(confirm('删除这条行动？')){ deleteAction(id); closeModal(); } });
 }
 function openMenu(id){
   const a=getAction(id); if(!a) return;
   openModal('操作', `
     <button class="btn" data-act="m-edit" data-id="${id}">✎ 编辑</button>
-    <button class="btn ghost" data-act="m-status" data-id="${id}" style="margin-top:8px">↻ 切换状态（当前：${a.status}）</button>
+    <button class="btn ghost" data-act="m-due" data-id="${id}" style="margin-top:8px">⏱ 设置截止日期</button>
     ${a.isAchievement?'':'<button class="btn ghost" data-act="m-ach" data-id="'+id+'" style="margin-top:8px">★ 标记为成果</button>'}
     <button class="btn ghost" data-act="m-fb" data-id="${id}" style="margin-top:8px">✓ 写反馈</button>
     <button class="btn ghost" data-act="m-del" data-id="${id}" style="margin-top:8px;color:#c0392b">删除</button>
   `);
+}
+
+function openDueModal(id){
+  const a=getAction(id); if(!a) return;
+  openModal('设置截止日期', `
+    <div class="field"><label>截止日期（可选，最晚什么时候完成）</label><input id="d-due" type="date" value="${a.dueDate||''}"></div>
+    <button class="btn" id="d-save">保存</button>
+    ${a.dueDate?'<button class="btn ghost" id="d-clear" style="margin-top:8px">清除截止日期</button>':''}`);
+  $('#d-save').addEventListener('click',()=>{ a.dueDate=$('#d-due').value||null; save(); closeModal(); render(); toast('已更新'); });
+  if(a.dueDate) $('#d-clear').addEventListener('click',()=>{ a.dueDate=null; save(); closeModal(); render(); toast('已清除'); });
 }
 
 /* ================= 项目库动作 ================= */
@@ -751,14 +826,31 @@ function cycleStepStatus(pid,sid){
   const p=state.projects.find(x=>x.id===pid); if(!p) return; const s=p.steps.find(x=>x.id===sid); if(!s) return;
   let i=STATUSES.indexOf(s.status); i=(i+1)%STATUSES.length; s.status=STATUSES[i]; save(); render();
 }
+function stepInActive(pid,sid){
+  const p=state.projects.find(x=>x.id===pid); if(!p) return false; const s=p.steps.find(x=>x.id===sid); if(!s) return false;
+  return state.actions.some(a=>a.projectId===pid && a.stepId===sid && a.status!=='已完成');
+}
 function stepToToday(pid,sid){
   const p=state.projects.find(x=>x.id===pid); if(!p) return; const s=p.steps.find(x=>x.id===sid); if(!s) return;
-  addAction({ content:s.content, dir:'other', source:'项目', dueDate:null, status:'待安排', projectId:pid, stepId:sid });
-  toast('已加入今日行动台');
+  if(stepInActive(pid,sid)){ toast('这个动作已经在行动台了'); return; }
+  addAction({ content:s.content, dir:'other', source:'项目', startDate:state.viewDay, dueDate:null, status:'待安排', projectId:pid, stepId:sid });
+  toast('已加入行动台');
 }
 function projStatus(pid){
   const p=state.projects.find(x=>x.id===pid); if(!p) return;
   let i=STATUSES.indexOf(p.status); i=(i+1)%STATUSES.length; p.status=STATUSES[i]; save(); render();
+}
+function openStepEdit(pid,sid){
+  const p=state.projects.find(x=>x.id===pid); if(!p) return; const s=p.steps.find(x=>x.id===sid); if(!s) return;
+  openModal('编辑动作', `
+    <div class="field"><label>动作内容</label><textarea id="se-c">${escapeHtml(s.content)}</textarea></div>
+    <button class="btn" id="se-save">保存</button>
+    <button class="btn ghost" id="se-del" style="margin-top:8px;color:#c0392b">删除这个动作</button>`);
+  $('#se-save').addEventListener('click',()=>{
+    const c=$('#se-c').value.trim(); if(!c){toast('内容不能为空');return;}
+    s.content=c; save(); closeModal(); render();
+  });
+  $('#se-del').addEventListener('click',()=>{ if(confirm('删除这个动作？')){ p.steps=p.steps.filter(x=>x.id!==sid); save(); closeModal(); render(); } });
 }
 function openProjEdit(pid){
   const p=pid?state.projects.find(x=>x.id===pid):null;
@@ -793,12 +885,33 @@ function openAddStep(pid){
     p.steps.push({id:uid(),content:c,status:'待安排'}); save(); closeModal(); render();
   });
 }
+function openProjAddEvent(pid){
+  openModal('记录完成事件', `
+    <div class="field"><label>完成事件（这一步实际做了什么 / 产出了什么）</label><textarea id="pe-c" placeholder="例如：已抽完 28 个历史家具项目，按供应商归类"></textarea></div>
+    <button class="btn" id="pe-save">保存</button>`);
+  $('#pe-save').addEventListener('click',()=>{
+    const c=$('#pe-c').value.trim(); if(!c){toast('写点什么');return;}
+    const p=state.projects.find(x=>x.id===pid); if(!p) return;
+    if(!p.events) p.events=[];
+    p.events.push({id:uid(),date:todayStr(),text:c}); save(); closeModal(); render(); toast('已记录完成事件');
+  });
+}
+function openProjEditEvent(pid,eid){
+  const p=state.projects.find(x=>x.id===pid); if(!p) return; const ev=(p.events||[]).find(x=>x.id===eid); if(!ev) return;
+  openModal('编辑完成事件', `
+    <div class="field"><label>完成事件</label><textarea id="pee-c">${escapeHtml(ev.text)}</textarea></div>
+    <button class="btn" id="pee-save">保存</button>
+    <button class="btn ghost" id="pee-del" style="margin-top:8px;color:#c0392b">删除</button>`);
+  $('#pee-save').addEventListener('click',()=>{ const c=$('#pee-c').value.trim(); if(!c){toast('写点什么');return;} ev.text=c; save(); closeModal(); render(); });
+  $('#pee-del').addEventListener('click',()=>{ if(confirm('删除这个完成事件？')){ p.events=p.events.filter(x=>x.id!==eid); save(); closeModal(); render(); } });
+}
 
 /* ================= 探索池动作 ================= */
 function poolAdd(dir,cat,i){
   const it=poolItem(dir,cat,i); if(!it) return;
-  addAction({ content:it, dir:dir, source:'探索池', dueDate:null, status:'待安排' });
-  toast('已加入今日行动台');
+  if(poolInActive(it)){ toast('这条已经在行动台了'); return; }
+  addAction({ content:it, dir:dir, source:'探索池', startDate:state.viewDay, dueDate:null, status:'待安排' });
+  toast('已加入行动台');
 }
 function poolNew(dir,cat){
   openModal('添加探索项', `<div class="field"><label>想以后可能做的事</label><textarea id="pn-c"></textarea></div>
@@ -808,8 +921,10 @@ function poolNew(dir,cat){
 }
 function randomInsp(){
   const all=flatPool(); if(all.length===0){ toast('探索池为空'); return; }
-  const pick=all[Math.floor(Math.random()*all.length)];
-  addAction({ content:pick.it, dir:pick.dir, source:'探索池', dueDate:null, status:'待安排' });
+  let pick=all[Math.floor(Math.random()*all.length)], guard=0;
+  while(poolInActive(pick.it) && guard++ < all.length){ pick=all[Math.floor(Math.random()*all.length)]; }
+  if(poolInActive(pick.it)){ toast('探索池里的都已在行动台了'); return; }
+  addAction({ content:pick.it, dir:pick.dir, source:'探索池', startDate:state.viewDay, dueDate:null, status:'待安排' });
   toast('已随机加入：'+pick.it);
 }
 
@@ -817,7 +932,7 @@ function randomInsp(){
 function markAch(id){
   const a=getAction(id); if(!a) return;
   openModal('标记为成果', `
-    <p style="color:var(--muted);font-size:13px">成果类型会按方向归类。补充一句它有什么用：</p>
+    <p style="color:var(--muted);font-size:13px">补充一句它有什么用：</p>
     <div class="field"><label>成果说明（背景 / 做了什么 / 结果 / 后续用途）</label><textarea id="ach-d">${escapeHtml(a.achDetail||'')}</textarea></div>
     <button class="btn" id="ach-save">保存为成果</button>`);
   $('#ach-save').addEventListener('click',()=>{ a.isAchievement=true; a.achDetail=$('#ach-d').value.trim(); if(a.status!=='已完成'){a.status='已完成';a.completedAt=new Date().toISOString();} save(); closeModal(); render(); toast('已沉淀为成果'); });
@@ -844,6 +959,44 @@ function importData(){
     const r=new FileReader(); r.onload=()=>{ try{ const s=JSON.parse(r.result); state=Object.assign(freshState(),s); save(); closeModal(); render(); toast('导入成功'); }catch(e){ toast('文件格式不对'); } }; r.readAsText(f); });
 }
 
+/* ================= 日历选择器 ================= */
+function openCal(){
+  calCursor = state.viewDay.slice(0,7);
+  openModal('选择日期',''); showCal();
+}
+function showCal(){
+  const [y,m]=calCursor.split('-').map(Number);
+  const firstDow=new Date(y,m-1,1).getDay();
+  const days=new Date(y,m,0).getDate();
+  const doneSet=new Set(state.actions.filter(a=>a.status==='已完成').map(a=>(a.completedAt||'').slice(0,10)));
+  let cells='';
+  for(let i=0;i<firstDow;i++) cells+='<span></span>';
+  for(let d=1;d<=days;d++){
+    const ds=y+'-'+String(m).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const cls=['cal-day'];
+    if(ds===todayStr()) cls.push('today');
+    if(ds===state.viewDay) cls.push('sel');
+    if(doneSet.has(ds)) cls.push('dot');
+    cells+=`<button class="${cls.join(' ')}" data-act="cal-pick" data-d="${ds}">${d}</button>`;
+  }
+  $('#modalBody').innerHTML = `
+    <div class="cal">
+      <div class="cal-head">
+        <button class="cal-nav" data-act="cal-prev">‹</button>
+        <div class="cal-title">${y}年${m}月</div>
+        <button class="cal-nav" data-act="cal-next">›</button>
+      </div>
+      <div class="cal-dow">${['日','一','二','三','四','五','六'].map(s=>`<span>${s}</span>`).join('')}</div>
+      <div class="cal-grid">${cells}</div>
+    </div>
+    <button class="btn ghost" data-act="cal-today" style="margin-top:12px">回到今天</button>`;
+}
+function shiftCal(n){
+  let [y,m]=calCursor.split('-').map(Number); m+=n;
+  if(m<1){m=12;y--;} if(m>12){m=1;y++;}
+  calCursor=y+'-'+String(m).padStart(2,'0'); showCal();
+}
+
 /* ================= 事件委托 ================= */
 document.addEventListener('click', e=>{
   const el=e.target.closest('[data-act]');
@@ -854,8 +1007,8 @@ function handleAct(act, el){
   const id=el.dataset.id;
   switch(act){
     case 'toggle': toggleAction(id); break;
-    case 'cycle-status': cycleStatus(id); break;
     case 'menu': openMenu(id); break;
+    case 'set-due': openDueModal(id); break;
     case 'body-toggle':{
       const t=todayStr(); if(!state.settings.bodyDone) state.settings.bodyDone={};
       state.settings.bodyDone[t]=!state.settings.bodyDone[t]; save(); render(); break;
@@ -866,6 +1019,11 @@ function handleAct(act, el){
       openModal('你已经做了这些',`<p style="font-size:14px;line-height:1.7">${ANX.nothing}</p>
         <p style="color:var(--muted)">目前累计已完成 <b>${n}</b> 件行动。回顾它们，而不是盯着未完成列表。</p>`); break; }
     case 'anx-redesign': openModal('关于重新设计',`<p style="font-size:14px;line-height:1.7">${ANX.redesign}</p>`); break;
+    // 日历
+    case 'cal-prev': shiftCal(-1); break;
+    case 'cal-next': shiftCal(1); break;
+    case 'cal-pick': state.viewDay=el.dataset.d; save(); closeModal(); render(); break;
+    case 'cal-today': state.viewDay=todayStr(); save(); closeModal(); render(); break;
     // 探索池
     case 'pool-filter': poolFilter=el.dataset.f; render(); break;
     case 'pool-add': poolAdd(el.dataset.dir, decodeURIComponent(el.dataset.cat), +el.dataset.i); break;
@@ -873,11 +1031,15 @@ function handleAct(act, el){
     case 'pool-pick': closeModal(); poolAdd(el.dataset.dir, decodeURIComponent(el.dataset.cat), +el.dataset.i); break;
     // 项目
     case 'step-toggle': toggleStep(el.dataset.pid, el.dataset.sid); break;
-    case 'step-status': cycleStepStatus(el.dataset.pid, el.dataset.sid); break;
+    case 'step-edit': openStepEdit(el.dataset.pid, el.dataset.sid); break;
     case 'step-to-today': stepToToday(el.dataset.pid, el.dataset.sid); break;
     case 'proj-status': projStatus(el.dataset.pid); break;
     case 'proj-add-step': openAddStep(el.dataset.pid); break;
     case 'proj-edit': openProjEdit(el.dataset.pid); break;
+    case 'proj-new': openProjEdit(null); break;
+    case 'proj-add-event': openProjAddEvent(el.dataset.pid); break;
+    case 'proj-edit-event': openProjEditEvent(el.dataset.pid, el.dataset.eid); break;
+    case 'proj-del-event': if(confirm('删除这个完成事件？')){ const p=state.projects.find(x=>x.id===el.dataset.pid); if(p&&p.events){ p.events=p.events.filter(x=>x.id!==el.dataset.eid); save(); render(); } } break;
     case 'proj-pick':{ const arr=window.__projPick||[]; const it=arr[+el.dataset.idx]; if(it){ closeModal(); stepToToday(it.pid,it.sid);} break; }
     // 记录
     case 'recfilter': state.recFilter=el.dataset.f; save(); render(); break;
@@ -891,7 +1053,7 @@ function handleAct(act, el){
     case 'add-from-pool': openPoolPicker(); break;
     case 'add-from-proj': openProjPicker(); break;
     case 'm-edit': closeModal(); openEditForm(id); break;
-    case 'm-status': cycleStatus(id); closeModal(); break;
+    case 'm-due': closeModal(); openDueModal(id); break;
     case 'm-ach': markAch(id); break;
     case 'm-fb': editFeedback(id); break;
     case 'm-del': if(confirm('删除这条行动？')){ deleteAction(id); closeModal(); } break;
@@ -902,9 +1064,8 @@ function handleAct(act, el){
 const fab=document.createElement('button'); fab.className='fab'; fab.textContent='+'; fab.addEventListener('click', openAddMenu);
 document.getElementById('app').appendChild(fab);
 
-/* 顶栏：日期切换（回看/规划任意一天） */
-$('#topDate').addEventListener('click', ()=> $('#datePick').click());
-$('#datePick').addEventListener('change', e=>{ state.viewDay = e.target.value || todayStr(); save(); render(); });
+/* 顶栏：点日期 -> 弹出月历；点「今天」-> 回今天 */
+$('#topDate').addEventListener('click', openCal);
 $('#backToday').addEventListener('click', ()=>{ state.viewDay=todayStr(); save(); render(); });
 /* 双击标题 -> 数据管理 */
 $('.brand').addEventListener('dblclick', ()=>{
@@ -918,7 +1079,7 @@ $('.brand').addEventListener('dblclick', ()=>{
 });
 
 render();
-</script>
 
+</script>
 
 </body></html>
